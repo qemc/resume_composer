@@ -1,6 +1,7 @@
 inflect==7.5.0
 more-itertools==10.8.0
 psycopg2-binary==2.9.11
+pydantic==2.12.5
 python-dotenv==1.2.1
 sqlacodegen==4.0.1
 SQLAlchemy==2.0.47

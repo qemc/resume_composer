@@ -5,9 +5,23 @@ from sqlalchemy import DateTime, ForeignKeyConstraint, Index, Integer, PrimaryKe
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from app.models.pydantic_def import (
+    PydanticJSONBridge,
+    CertificateSchema,
+    ExperienceSchema,
+    ProjectSchema,
+    ContactSchema,
+    SkillSchema,
+    LanguageSchema,
+    InterestSchema,
+    TopicSchema,
+)
+
 
 class Base(DeclarativeBase):
     pass
+
+
 
 
 class Users(Base):
@@ -60,7 +74,7 @@ class Certificates(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
-    certificate: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    certificate: Mapped[CertificateSchema] = mapped_column(PydanticJSONBridge(CertificateSchema), nullable=False)
 
     user: Mapped['Users'] = relationship('Users', back_populates='certificates')
 
@@ -75,7 +89,7 @@ class Experiences(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
-    experience: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    experience: Mapped[ExperienceSchema] = mapped_column(PydanticJSONBridge(ExperienceSchema), nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
     updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
 
@@ -94,7 +108,7 @@ class Projects(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
-    project: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    project: Mapped[ProjectSchema] = mapped_column(PydanticJSONBridge(ProjectSchema), nullable=False)
 
     user: Mapped['Users'] = relationship('Users', back_populates='projects')
 
@@ -109,10 +123,10 @@ class Resumes(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
-    contact: Mapped[dict] = mapped_column(JSONB, nullable=False)
-    skills: Mapped[dict] = mapped_column(JSONB, nullable=False)
-    languages: Mapped[dict] = mapped_column(JSONB, nullable=False)
-    interests: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    contact: Mapped[ContactSchema] = mapped_column(PydanticJSONBridge(ContactSchema), nullable=False)
+    skills: Mapped[list[SkillSchema]] = mapped_column(JSONB, nullable=False)
+    languages: Mapped[list[LanguageSchema]] = mapped_column(JSONB, nullable=False)
+    interests: Mapped[list[InterestSchema]] = mapped_column(JSONB, nullable=False)
     summary: Mapped[Optional[str]] = mapped_column(Text)
 
     user: Mapped['Users'] = relationship('Users', back_populates='resumes')
@@ -131,7 +145,7 @@ class AiEnhancedExperience(Base):
     experience_id: Mapped[int] = mapped_column(Integer, nullable=False)
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
-    experience: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    experience: Mapped[ExperienceSchema] = mapped_column(PydanticJSONBridge(ExperienceSchema), nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
     updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
 
@@ -154,7 +168,7 @@ class Topics(Base):
     experience_id: Mapped[int] = mapped_column(Integer, nullable=False)
     resume_lang: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, server_default=text('now()'))
-    topic: Mapped[Optional[str]] = mapped_column(Text)
+    topic: Mapped[TopicSchema] = mapped_column(PydanticJSONBridge(TopicSchema), nullable=False)
 
     career_path: Mapped['CareerPaths'] = relationship('CareerPaths', back_populates='topics')
     experience: Mapped['Experiences'] = relationship('Experiences', back_populates='topics')
