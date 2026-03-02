@@ -5,8 +5,7 @@ from sqlalchemy import DateTime, ForeignKeyConstraint, Index, Integer, PrimaryKe
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from app.models.pydantic_def import (
-    PydanticJSONBridge,
+from app.models.pydantic_jsonb_db import (
     CertificateSchema,
     ExperienceSchema,
     ProjectSchema,
@@ -16,13 +15,10 @@ from app.models.pydantic_def import (
     InterestSchema,
     TopicSchema,
 )
-
+from app.models.helpers import PydanticJSONBridge
 
 class Base(DeclarativeBase):
     pass
-
-
-
 
 class Users(Base):
     __tablename__ = 'users'

@@ -18,8 +18,6 @@ engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
 
-
-
 def with_session_query(func):
     @wraps(func)
     def wrapper(*args, **kwargs):

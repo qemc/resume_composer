@@ -1,6 +1,9 @@
 from app.config.database import with_session_query
 from sqlalchemy.orm import sessionmaker
-from app.models.models import Users, Experiences
+from app.models.models import Experiences
+from fastapi import FastAPI
+
+app = FastAPI()
 
 @with_session_query
 def get_user_by_id(session: sessionmaker, user_id: int) -> Experiences:
